@@ -4,25 +4,24 @@ frameworkVersion: ">=1.28.0 <2.0.0"
 
 provider:
   name: aws
-  #region: ap-northeast-1
   apiName: s3-serverless-uploader
-  stage: ${opt:stage, 'dev2'}
+  stage: ${opt:stage, 'dev3'}
   versionFunctions: false
 
 functions:
-  #cache_clear:
-  #  region: ap-northeast-1
-  #  runtime: go1.x
-  #  handler: bin/cache_clear
-    #events:
-    #  - s3:
-    #      bucket: assets.yukpiz.me
-    #      event: s3:ObjectCreated:*
+  cache_clear:
+    region: ap-northeast-1
+    runtime: go1.x
+    handler: bin/cache_clear
+    events:
+      - s3:
+          bucket: assets.yukpiz.me
+          event: s3:ObjectCreated:*
   image_proxy:
     region: us-east-1
     runtime: nodejs10.x
     handler: functions/image_proxy/index.handler
     events:
       - cloudFront:
-          eventType: origin-request
-          origin: https://assets.yukpiz.me
+          eventType: viewer-request
+          origin: s3://assets.yukpiz.me.s3.amazonaws.com
